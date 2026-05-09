@@ -8,14 +8,12 @@ public class ContaController {
 
     private ArrayList<Conta> listaContas = new ArrayList<Conta>();
 
-    // Listar todas as contas
     public void listarTodas() {
         for (Conta conta : listaContas) {
             conta.visualizar();
         }
     }
 
-    // Buscar conta por número
     public Conta buscarNaCollection(int numero) {
         for (Conta conta : listaContas) {
             if (conta.getNumero() == numero) {
@@ -35,14 +33,12 @@ public class ContaController {
         }
     }
 
-    // Cadastrar nova conta
     public void cadastrar(Conta conta) {
         listaContas.add(conta);
         System.out.println(Cores.VERDE +
             "\nConta cadastrada com sucesso!" + Cores.RESET);
     }
 
-    // Atualizar conta existente
     public void atualizar(Conta conta) {
         Conta contaAtualizar = buscarNaCollection(conta.getNumero());
         if (contaAtualizar != null) {
@@ -55,7 +51,6 @@ public class ContaController {
         }
     }
 
-    // Deletar conta
     public void deletar(int numero) {
         Conta contaDeletar = buscarNaCollection(numero);
         if (contaDeletar != null) {
@@ -68,8 +63,48 @@ public class ContaController {
         }
     }
 
-    // Gerar número sequencial para nova conta
     public int gerarNumero() {
         return listaContas.size() + 1;
+    }
+
+    public void sacar(int numero, float valor) {
+        Conta conta = buscarNaCollection(numero);
+        if (conta != null) {
+            if (conta.sacar(valor)) {
+                System.out.println(Cores.VERDE +
+                    "\nSaque realizado com sucesso!" + Cores.RESET);
+            }
+        } else {
+            System.out.println(Cores.VERMELHO +
+                "\nConta número " + numero + " não encontrada!" + Cores.RESET);
+        }
+    }
+
+    public void depositar(int numero, float valor) {
+        Conta conta = buscarNaCollection(numero);
+        if (conta != null) {
+            conta.depositar(valor);
+            System.out.println(Cores.VERDE +
+                "\nDepósito realizado com sucesso!" + Cores.RESET);
+        } else {
+            System.out.println(Cores.VERMELHO +
+                "\nConta número " + numero + " não encontrada!" + Cores.RESET);
+        }
+    }
+
+    public void transferir(int numeroOrigem, int numeroDestino, float valor) {
+        Conta contaOrigem  = buscarNaCollection(numeroOrigem);
+        Conta contaDestino = buscarNaCollection(numeroDestino);
+
+        if (contaOrigem != null && contaDestino != null) {
+            if (contaOrigem.sacar(valor)) {
+                contaDestino.depositar(valor);
+                System.out.println(Cores.VERDE +
+                    "\nTransferência realizada com sucesso!" + Cores.RESET);
+            }
+        } else {
+            System.out.println(Cores.VERMELHO +
+                "\nConta de origem ou destino não encontrada!" + Cores.RESET);
+        }
     }
 }
